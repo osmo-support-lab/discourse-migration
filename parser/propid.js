@@ -1,6 +1,31 @@
 const fs = require('fs');
-const { decode } = require('html-entities');
 const yargs = require('yargs');
+
+// Read the JSON file
+function readJSONFile(filePath) {
+  try {
+    const data = fs.readFileSync(filePath, 'utf8');
+    return JSON.parse(data);
+  } catch (err) {
+    console.error('Error reading JSON file:', err.message);
+    return null;
+  }
+}
+
+// Process the filtered proposal list
+function processPropList(proposalIds) {
+  for (const proposalId of proposalIds) {
+    const proposal = propList.find(item => item.proposal_id === proposalId.toString());
+    if (proposal) {
+      console.log(`Processing Proposal ID: ${proposalId}`);
+      const commonwealthUrl = proposal.content.description.match(/https:\/\/commonwealth.im\/osmosis\/discussion\/(\d+)/);
+      const commonwealthId = commonwealthUrl ? commonwealthUrl[1] : 'N/A';
+      console.log(`Commonwealth ID: ${commonwealthId}`);
+    } else {
+      console.log(`No proposal found with proposal_id: ${proposalId}`);
+    }
+  }
+}
 
 // Define command-line options using yargs
 const options = yargs
@@ -12,48 +37,10 @@ const options = yargs
   })
   .argv;
 
-// Read the file
-const filePath = process.argv[2];
-fs.readFile(filePath, 'utf8', (err, jsonString) => {
-  if (err) {
-    console.error('Error reading file:', err);
-    return;
-  }
+// Read the JSON data from the file
+const filePath = options._[0];
+const propList = readJSONFile(filePath);
 
-  // Parse the JSON data
-  try {
-    const data = JSON.parse(jsonString);
-
-    // Get proposal_ids from command-line argument
-    const proposalIds = options.proposal_id.map(id => parseInt(id));
-
-    // Process each filtered proposal
-    proposalIds.forEach(proposalId => {
-      // Find the proposal specified by proposal_id
-      const proposal = data.find(proposal => proposal.proposal_id === proposalId);
-
-      // Check if the proposal with the given 'proposal_id' exists
-      if (!proposal) {
-        console.log(`No proposal found with proposal_id: ${proposalId}`);
-        return;
-      }
-
-      // Extract the description from the filtered proposal
-      const description = proposal.content.description;
-
-      // Extract the number after '/discussion/' in the description URL
-      const urlPattern = /https:\/\/commonwealth\.im\/osmosis\/discussion\/(\d+)/;
-      const match = description.match(urlPattern);
-
-      // Check if the desired URL pattern is found
-      if (match) {
-        const discussionNumber = parseInt(match[1]);
-        console.log(`Proposal ID: ${proposalId}, Discussion Number: ${discussionNumber}`);
-      } else {
-        console.log(`Proposal ID: ${proposalId}, No discussion URL with domain "commonwealth.im" found in the description.`);
-      }
-    });
-  } catch (error) {
-    console.error('Error parsing JSON:', error);
-  }
-});
+// Process each proposal_id specified in the command line
+const proposalIds = options.proposal_id.map(proposalId => proposalId.toString());
+processPropList(proposalIds);
