@@ -1,0 +1,48 @@
+{
+  "status": "Success",
+  "result": {
+    "communities": [
+      {
+        "id": "osmosis",
+        "chain_node_id": 20,
+        "name": "Osmosis",
+        "discord_config_id": null,
+        "description": "The Interchain Dex",
+        "token_name": null,
+        "website": "https://osmosis.zone/",
+        "discord": "https://discord.com/invite/osmosis",
+        "element": "",
+        "telegram": "https://t.me/osmosis_chat",
+        "github": "https://github.com/osmosis-labs/osmosis",
+        "default_symbol": "OSMO",
+        "network": "osmosis",
+        "base": "cosmos",
+        "ss58_prefix": null,
+        "icon_url": "https://commonwealth-uploads.s3.us-east-2.amazonaws.com/osm.png",
+        "active": true,
+        "stages_enabled": true,
+        "custom_stages": "[\"Discussion\",\"Drafted - Pre-Voting\",\"On Chain\",\"Passed\",\"Rejected\",\"Withdrawn\",\"Abandoned\",\"Revised Thread Posted\"]",
+        "custom_domain": "gov.osmosis.zone",
+        "block_explorer_ids": null,
+        "collapsed_on_homepage": false,
+        "type": "chain",
+        "substrate_spec": null,
+        "has_chain_events_listener": true,
+        "default_summary_view": true,
+        "default_page": null,
+        "has_homepage": false,
+        "hide_projects": null,
+        "terms": "",
+        "bech32_prefix": "osmo",
+        "admin_only_polling": null,
+        "category": [
+          "DAO",
+          "DeFi"
+        ],
+        "created_at": "2021-07-28T05:55:16.509Z",
+        "updated_at": null
+      }
+    ],
+    "count": 1
+  }
+}
