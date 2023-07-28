@@ -21,7 +21,7 @@ function processPropList(proposalIds) {
       console.log(`Processing Proposal ID: ${proposalId}`);
       const commonwealthUrl = proposal.content.description.match(/https:\/\/commonwealth.im\/osmosis\/discussion\/(\d+)/);
       const commonwealthId = commonwealthUrl ? commonwealthUrl[1] : null;
-      console.log(`Commonwealth ID: ${commonwealthId ? colors.green(commonwealthId) : colors.keyword('orange')('N/A')}`);
+      console.log(`Commonwealth ID: ${commonwealthId ? colors.green(commonwealthId) : colors.yellow('N/A')}`);
       console.log(`Title: ${colors.blue(proposal.content.title)}`);
       console.log(); // Empty line between items
     } else {
