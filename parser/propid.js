@@ -20,7 +20,7 @@ function processPropList(proposalIds) {
       console.log(`Processing Proposal ID: ${proposalId}`);
       const commonwealthUrl = proposal.content.description.match(/https:\/\/commonwealth.im\/osmosis\/discussion\/(\d+)/);
       const commonwealthId = commonwealthUrl ? commonwealthUrl[1] : 'N/A';
-      console.log(`Commonwealth ID: ${commonwealthId}`);
+      console.log(`thread_id: ${commonwealthId}`);
     } else {
       console.log(`No proposal found with proposal_id: ${proposalId}`);
     }
