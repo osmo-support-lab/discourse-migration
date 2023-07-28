@@ -25,7 +25,7 @@ fs.readFile(filePath, 'utf8', (err, jsonString) => {
     const data = JSON.parse(jsonString);
 
     // Get proposal_ids from command-line argument
-    const proposalIds = options.proposal_id;
+    const proposalIds = options.proposal_id.map(id => parseInt(id));
 
     // Process each filtered proposal
     proposalIds.forEach(proposalId => {
