@@ -1,6 +1,6 @@
 tooling to handle and organize historical proposal data/off-chain discussion data
 
-requires npm pkgs 'html_objects, yargs'
+requires npm pkgs 'html-objects, yargs, colors, chalk'
 
 <br>
 
