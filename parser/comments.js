@@ -1,8 +1,20 @@
-// parse JSON respectively for 'id' and/or 'thread_id', int 'null'
-// node script.js /path/to/data.json 69420 null
-
 const fs = require('fs');
 const { decode } = require('html-entities');
+const yargs = require('yargs');
+
+// Define command-line options using yargs
+const options = yargs
+  .option('id', {
+    alias: 'i',
+    describe: 'Filter by comment id',
+    type: 'number',
+  })
+  .option('thread_id', {
+    alias: 't',
+    describe: 'Filter by comment thread_id',
+    type: 'number',
+  })
+  .argv;
 
 // Read the file
 const filePath = process.argv[2];
@@ -18,8 +30,8 @@ fs.readFile(filePath, 'utf8', (err, jsonString) => {
     const comments = data.result.comments;
 
     // Get command-line arguments
-    const id = process.argv[3] ? parseInt(process.argv[3]) : null;
-    const threadId = process.argv[4] ? parseInt(process.argv[4]) : null;
+    const id = options.id !== undefined ? parseInt(options.id) : null;
+    const threadId = options.thread_id !== undefined ? parseInt(options.thread_id) : null;
 
     // Filter comments based on command-line arguments and extract required fields
     const filteredComments = comments.filter(comment => {
