@@ -1,5 +1,6 @@
 const fs = require('fs');
 const yargs = require('yargs');
+const colors = require('colors');
 
 // Read the JSON file
 function readJSONFile(filePath) {
@@ -19,20 +20,33 @@ function processPropList(proposalIds) {
     if (proposal) {
       console.log(`Processing Proposal ID: ${proposalId}`);
       const commonwealthUrl = proposal.content.description.match(/https:\/\/commonwealth.im\/osmosis\/discussion\/(\d+)/);
-      const commonwealthId = commonwealthUrl ? commonwealthUrl[1] : 'N/A';
-      console.log(`thread_id: ${commonwealthId}`);
+      const commonwealthId = commonwealthUrl ? commonwealthUrl[1] : null;
+      console.log(`Commonwealth ID: ${commonwealthId ? colors.green(commonwealthId) : colors.keyword('orange')('N/A')}`);
+      console.log(`Title: ${colors.blue(proposal.content.title)}`);
+      console.log(); // Empty line between items
     } else {
       console.log(`No proposal found with proposal_id: ${proposalId}`);
+      console.log(); // Empty line between items
     }
   }
+}
+
+// Function to expand a range of integers (e.g., "200-203") into an array of individual integers [200, 201, 202, 203]
+function expandRange(range) {
+  const rangeArray = range.split('-').map(Number);
+  if (rangeArray.length === 2) {
+    const [start, end] = rangeArray;
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  }
+  return rangeArray;
 }
 
 // Define command-line options using yargs
 const options = yargs
   .option('proposal_id', {
     alias: 'p',
-    describe: 'Specify proposal_id to filter',
-    type: 'array',
+    describe: 'Specify proposal_id(s) to filter, you can use a range like "200-203"',
+    type: 'string',
     demandOption: true,
   })
   .argv;
@@ -41,6 +55,7 @@ const options = yargs
 const filePath = options._[0];
 const propList = readJSONFile(filePath);
 
-// Process each proposal_id specified in the command line
-const proposalIds = options.proposal_id.map(proposalId => proposalId.toString());
+// Process each proposal_id specified in the command line, including ranges
+const proposalIdsInput = options.proposal_id.split(/\s+/);
+const proposalIds = proposalIdsInput.flatMap(expandRange).map(proposalId => proposalId.toString());
 processPropList(proposalIds);
