@@ -4,13 +4,13 @@ const yargs = require('yargs');
 
 // Define command-line options using yargs
 const options = yargs
-  .option('id', {
-    alias: 'i',
+  .option('comment_id', {
+    alias: 'c',
     describe: 'Filter by comment id',
     type: 'number',
   })
-  .option('thread_id', {
-    alias: 't',
+  .option('id', {
+    alias: 'i',
     describe: 'Filter by comment thread_id',
     type: 'number',
   })
@@ -30,43 +30,45 @@ fs.readFile(filePath, 'utf8', (err, jsonString) => {
     const comments = data.result.comments;
 
     // Get command-line arguments
-    const id = options.id !== undefined ? parseInt(options.id) : null;
-    const threadId = options.thread_id !== undefined ? parseInt(options.thread_id) : null;
+    const commentId = options.comment_id !== undefined ? parseInt(options.comment_id) : null;
+    const threadId = options.id !== undefined ? parseInt(options.id) : null;
 
     // Filter comments based on command-line arguments and extract required fields
     const filteredComments = comments.filter(comment => {
       return (
-        (id !== null && comment.id === id) ||
+        (commentId !== null && comment.id === commentId) ||
         (threadId !== null && comment.thread_id === threadId)
       );
     }).map(comment => {
       const {
         id,
         thread_id,
-        plaintext,
         parent_id,
-        created_by,
         created_at,
-        updated_at,
-        address
+        address,
+        plaintext
       } = comment;
 
       return {
         id,
         thread_id,
-        plaintext: decode(plaintext.replace(/\\n/g, '\n')), // Decode HTML entities and replace escaped newlines
         parent_id,
-        created_by,
         created_at,
-        ...(created_at !== updated_at && { updated_at }), // Only include updated_at if it's different from created_at
-        address
+        address,
+        plaintext: decode(plaintext.replace(/\\n/g, '\n')) // Decode HTML entities and replace escaped newlines
       };
     });
 
-    // Format the output as a valid JSON string
-    const formattedOutput = JSON.stringify(filteredComments, null, 2);
+    // Sort comments by created_at in ascending order
+    const sortedComments = filteredComments.sort((a, b) => a.created_at.localeCompare(b.created_at));
 
-    console.log("Filtered Comments:\n", formattedOutput);
+    // Format the output as a valid JSON string
+    const formattedOutput = JSON.stringify(sortedComments, null, 2);
+
+    // Replace escaped newline with actual newline for JSON output
+    const finalOutput = formattedOutput.replace(/\\n/g, '\n');
+
+    console.log("Discussion Comments:\n", finalOutput + '\n');
   } catch (error) {
     console.error('Error parsing JSON:', error);
   }
