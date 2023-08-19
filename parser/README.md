@@ -12,8 +12,16 @@ requires source data as arg '/path/to/data.json' and flag '--proposal_id <int>' 
 
 <br>
 
-'comments' -- find comments by 'id' or 'thread_id', print in chronological order from first to latest 
-requires source data as arg '/path/to/data.json', accepts flags '--id'<int/null> and/or '--thread_id'<int/null>
+'thread' -- find thread by `id` and print
+specify source as arg `/path/to/data.json`, req flag `'--id'<int/null>`
 <br>
 
-`node comment.js ./data/comments.json --id 69420 --thread_id null`
+`node thread.js ./data/threads.json -i 1546`
+
+<br>
+
+'comment' -- find comments by `id` [matches 'threads' `id`] or `comment_id`, print in chronological order from first to latest 
+specify source as arg `/path/to/data.json`, req one or more flags ` '--id'<int/null> '--comment_id'<int/null>`
+<br>
+
+`node comment.js ./data/comments.json -i 1546`
